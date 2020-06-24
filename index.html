@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+
+        #allmap {
+            height: 100vh;
+            width: 100%;
+        }
+
+        #r-result {
+            width: 100%;
+        }
+    </style>
+    <script type="text/javascript"
+        src="https://api.map.baidu.com/api?type=webgl&v=1.0&ak=h3ZvYcNpzmhXrv0rkEnfpyBbHbueg1Mj"></script>
+    <title>添加/删除覆盖物</title>
+</head>
+
+<body>
+    <div id="allmap"></div>
+</body>
+
+</html>
+<script type="text/javascript">
+    //数据准备
+    var geoCoordMap = {
+        东京: [139.67, 35.8],
+        香港: [114.15, 22.15],
+        台北: [121.56, 25.04],
+        新加坡: [103.45, 1.18],
+        青岛: [120.33, 36.07],
+        上海: [121.48, 31.22],
+        厦门: [118.1, 24.46],
+        福州: [119.3, 26.08],
+        南宁: [108.33, 22.84],
+        广州: [113.23, 23.16],
+        太原: [112.53, 37.87],
+        昆明: [102.73, 25.04],
+        深圳: [114.07, 22.62],
+        海口: [110.35, 20.02],
+        沈阳: [123.38, 41.8],
+        长春: [125.35, 43.88],
+        银川: [106.27, 38.47],
+        南昌: [115.89, 28.68],
+        呼和浩特: [111.65, 40.82],
+        成都: [104.06, 30.67],
+        西安: [108.95, 34.27],
+        重庆: [106.54, 29.59],
+        南京: [118.78, 32.04],
+        贵阳: [106.71, 26.57],
+        北京: [116.46, 39.92],
+        杭州: [120.19, 30.26],
+        济南: [117, 36.65],
+        兰州: [103.73, 36.03],
+        天津: [117.2, 39.13],
+        郑州: [113.65, 34.76],
+        哈尔滨: [126.63, 45.75],
+        石家庄: [114.48, 38.03],
+        长沙: [113, 28.21],
+        合肥: [117.27, 31.86],
+        武汉: [114.31, 30.52]
+    };
+    //画点函数 
+    function drawpoint(data) {
+        var points = {};
+        for (var key in data) {
+            var keys = new BMapGL.Point(data[key][0], data[key][1]);
+            var marker = new BMapGL.Marker(keys);
+            map.addOverlay(marker);            //增加点
+            points[key] = keys;
+        }
+        return points;
+    }
+
+    //画线函数生成点集
+    function drawline(data) {
+        var linespoint = [];
+        var arr = [];
+        arr.push(data.哈尔滨); arr.push(data.长春); linespoint.push(arr); arr = [];
+        arr.push(data.沈阳); arr.push(data.长春); linespoint.push(arr); arr = [];
+        arr.push(data.沈阳); arr.push(data.天津); linespoint.push(arr); arr = [];
+        arr.push(data.天津); arr.push(data.北京); linespoint.push(arr); arr = [];
+        arr.push(data.北京); arr.push(data.呼和浩特); linespoint.push(arr); arr = [];
+        arr.push(data.北京); arr.push(data.石家庄); linespoint.push(arr); arr = [];
+        arr.push(data.石家庄); arr.push(data.太原); linespoint.push(arr); arr = [];
+        arr.push(data.石家庄); arr.push(data.郑州); linespoint.push(arr); arr = [];
+        arr.push(data.郑州); arr.push(data.西安); linespoint.push(arr); arr = [];
+        arr.push(data.西安); arr.push(data.银川); linespoint.push(arr); arr = [];
+        arr.push(data.西安); arr.push(data.兰州); linespoint.push(arr); arr = [];
+        arr.push(data.西安); arr.push(data.成都); linespoint.push(arr); arr = [];
+        arr.push(data.成都); arr.push(data.昆明); linespoint.push(arr); arr = [];
+        arr.push(data.成都); arr.push(data.重庆); linespoint.push(arr); arr = [];
+        arr.push(data.重庆); arr.push(data.贵阳); linespoint.push(arr); arr = [];
+        arr.push(data.重庆); arr.push(data.武汉); linespoint.push(arr); arr = [];
+        arr.push(data.武汉); arr.push(data.郑州); linespoint.push(arr); arr = [];
+        arr.push(data.武汉); arr.push(data.长沙); linespoint.push(arr); arr = [];
+        arr.push(data.长沙); arr.push(data.香港); linespoint.push(arr); arr = [];
+        arr.push(data.香港); arr.push(data.广州); linespoint.push(arr); arr = [];
+        arr.push(data.香港); arr.push(data.海口); linespoint.push(arr); arr = [];
+        arr.push(data.香港); arr.push(data.深圳); linespoint.push(arr); arr = [];
+        arr.push(data.广州); arr.push(data.南宁); linespoint.push(arr); arr = [];
+        arr.push(data.广州); arr.push(data.深圳); linespoint.push(arr); arr = [];
+        arr.push(data.深圳); arr.push(data.厦门); linespoint.push(arr); arr = [];
+        arr.push(data.厦门); arr.push(data.福州); linespoint.push(arr); arr = [];
+        arr.push(data.福州); arr.push(data.杭州); linespoint.push(arr); arr = [];
+        arr.push(data.杭州); arr.push(data.南昌); linespoint.push(arr); arr = [];
+        arr.push(data.杭州); arr.push(data.上海); linespoint.push(arr); arr = [];
+        arr.push(data.上海); arr.push(data.南京); linespoint.push(arr); arr = [];
+        arr.push(data.南京); arr.push(data.合肥); linespoint.push(arr); arr = [];
+        arr.push(data.合肥); arr.push(data.武汉); linespoint.push(arr); arr = [];
+        arr.push(data.合肥); arr.push(data.济南); linespoint.push(arr); arr = [];
+        arr.push(data.济南); arr.push(data.青岛); linespoint.push(arr); arr = [];
+        arr.push(data.济南); arr.push(data.天津); linespoint.push(arr); arr = [];
+
+        for (var j = 0; j < linespoint.length; j++) {
+            var polyline = new BMapGL.Polyline([
+                linespoint[j][0],
+                linespoint[j][1],
+            ], { strokeColor: "black", strokeWeight: 4, strokeOpacity: 0.5 });
+            map.addOverlay(polyline);
+        }
+
+
+
+    }
+    // 百度地图API功能
+    var map = new BMapGL.Map("allmap");
+    var point = new BMapGL.Point(116.404, 39.915);
+    var points = drawpoint(geoCoordMap);
+    var linespoint = drawline(points);
+    map.centerAndZoom(point, 6);
+    // map.enableScrollWheelZoom();
+    map.setMapStyleV2({
+        styleId: 'c40eb787267fab1266cd23ef818bb93e'
+    });
+    var polyline = new BMapGL.Polyline([
+        new BMapGL.Point(121.48, 31.22),
+        new BMapGL.Point(139.67, 35.8)
+    ], { strokeColor: "blue", strokeWeight: 4, strokeOpacity: 0.5 });   //创建线
+
+    var polylineToSingapore = new BMapGL.Polyline([
+        new BMapGL.Point(114.15, 22.15),
+        new BMapGL.Point(103.45, 1.18)
+
+    ], { strokeColor: "blue", strokeWeight: 4, strokeOpacity: 0.5 });   //创建线
+
+    var polylineTo0 = new BMapGL.Polyline([
+        new BMapGL.Point(139.67, 35.8),
+        new BMapGL.Point(180, 37.43)
+
+    ], { strokeColor: "blue", strokeWeight: 4, strokeOpacity: 0.5 });   //创建线
+    var polylineTo180 = new BMapGL.Polyline([
+        new BMapGL.Point(254.02, 40.42),
+        new BMapGL.Point(180.01, 37.43)
+
+    ], { strokeColor: "blue", strokeWeight: 4, strokeOpacity: 0.5 });   //创建线
+
+    //添加覆盖物
+    function add_overlay() {
+        map.addOverlay(polyline);          //增加折线
+        map.addOverlay(polylineToSingapore);          //增加折线
+        map.addOverlay(polylineTo0);          //增加折线
+        map.addOverlay(polylineTo180);          //增加折线
+    }
+    // //清除覆盖物
+    // function remove_overlay() {
+    //     map.clearOverlays();
+    // }
+    add_overlay();
+</script>
